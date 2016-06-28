@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Mopidy Manager</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, user-scalable=no" />
+<link rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
+      integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7"
+      crossorigin="anonymous" />
+<script src="static/js/reqwest.min.js"></script>
+<script>
+	var MopidyManager = function(xhr) {
+		this.__xhr = xhr;
+	};
+
+	MopidyManager.prototype.setStatus = function(url, status) {
+		this.__xhr({
+			"url": url,
+                        "method": "patch",
+                        "type": "json",
+			"data": {
+				"status": status
+			}
+		})
+                .then(this.__success, this.__error);
+	};
+
+	MopidyManager.prototype.__success = function(response) {
+		console.log("success", response);
+	};
+
+        MopidyManager.prototype.__error = function(response) {
+                console.log("error", response);
+        };
+
+
+        var manager = new MopidyManager(reqwest);
+</script>
+</head>
+<body class="container-fluid">
+	<section class="btn-group btn-group-lg">
+		<button class="btn btn-primary btn-lg"
+                        onclick="manager.setStatus('services/mopidy', 'restart');">
+			<span class="glyphicon glyphicon-refresh"></span>
+			Restart Mopidy
+		</button>
+		<button class="btn btn-danger btn-lg"
+                        onclick="manager.setStatus('server', 'shutdown');">
+			<span class="glyphicon glyphicon-trash"></span>
+			Shutdown
+		</button>
+	</section>
+</body>
+</html>
